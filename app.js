@@ -173,6 +173,13 @@ function updateView(latLng, address) {
   // お気に入り追加ボタンを有効化
   document.getElementById('add-favorite-btn').disabled   = false;
   document.getElementById('add-favorite-btn').textContent = '♡ お気に入りに追加';
+
+  // モバイルでは検索後にStreetViewエリアへ自動スクロール
+  if (isMobile()) {
+    setTimeout(() => {
+      document.querySelector('.view-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 300);
+  }
 }
 
 // -----------------------------------------------
@@ -260,8 +267,10 @@ function gotoFavorite(id) {
   document.getElementById('year-input').value   = fav.year || '';
   document.getElementById('memo-input').value   = fav.memo || '';
 
-  // スクロール（モバイル）
-  document.querySelector('.view-area').scrollIntoView({ behavior: 'smooth' });
+  // モバイルではStreetViewエリアへスクロール
+  if (isMobile()) {
+    document.querySelector('.view-area').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 /** 1件削除 */
@@ -372,6 +381,14 @@ function showToast(message, type = 'info') {
     toast.style.transition = 'opacity 0.3s';
     setTimeout(() => toast.remove(), 300);
   }, 2800);
+}
+
+/**
+ * スマートフォン判定（画面幅 900px 未満）
+ * @returns {boolean}
+ */
+function isMobile() {
+  return window.innerWidth < 900;
 }
 
 // トーストアニメーション用スタイルを動的に挿入
