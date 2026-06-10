@@ -15,7 +15,7 @@
 //  【推奨：キーのドメイン制限】
 //  Google Cloud Console でAPIキーの「アプリケーションの制限」を
 //  「HTTPリファラー（ウェブサイト）」に設定し、
-//  自分のドメイン（例: https://kenken6291.github.io/streetview-reunion2/*）だけを許可することを強く推奨します。
+//  自分のドメイン（例: https://kenken6291.github.io/streetview-reunion3/*）だけを許可することを強く推奨します。
 // ============================================================
 
 const CONFIG = {
