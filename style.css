@@ -1,6 +1,7 @@
-/* ============================
-   あの場所の今 — スタイルシート
-   ============================ */
+/* ====================================================
+   あの場所の今 — レスポンシブスタイルシート
+   モバイルファースト設計
+   ==================================================== */
 
 /* ---------- リセット & 変数 ---------- */
 *, *::before, *::after {
@@ -10,26 +11,34 @@
 }
 
 :root {
-  --color-bg:        #f0f4f8;
-  --color-surface:   #ffffff;
-  --color-border:    #e2e8f0;
-  --color-primary:   #3b82f6;
-  --color-primary-h: #2563eb;
-  --color-secondary: #10b981;
+  --color-bg:          #f0f4f8;
+  --color-surface:     #ffffff;
+  --color-border:      #e2e8f0;
+  --color-primary:     #3b82f6;
+  --color-primary-h:   #2563eb;
+  --color-secondary:   #10b981;
   --color-secondary-h: #059669;
-  --color-accent:    #f59e0b;
-  --color-danger:    #ef4444;
-  --color-text:      #1a202c;
-  --color-text-sub:  #4a5568;
-  --color-text-muted:#718096;
-  --color-header-bg: #1e3a5f;
-  --shadow-sm:   0 1px 3px rgba(0,0,0,0.10);
-  --shadow-md:   0 4px 12px rgba(0,0,0,0.10);
-  --shadow-lg:   0 8px 32px rgba(0,0,0,0.12);
-  --radius-sm:   8px;
-  --radius-md:   12px;
-  --radius-lg:   16px;
-  --font-sans:   'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+  --color-accent:      #f59e0b;
+  --color-danger:      #ef4444;
+  --color-text:        #1a202c;
+  --color-text-sub:    #4a5568;
+  --color-text-muted:  #718096;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.10);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.10);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,0.12);
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --font-sans:  'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+
+  /* タッチターゲット最小サイズ */
+  --touch-min: 44px;
+}
+
+html {
+  /* iOSのフォントサイズ自動調整を無効化 */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 html, body {
@@ -37,7 +46,6 @@ html, body {
   font-family: var(--font-sans);
   background: var(--color-bg);
   color: var(--color-text);
-  font-size: 14px;
   line-height: 1.6;
 }
 
@@ -45,7 +53,7 @@ html, body {
 .app-header {
   background: linear-gradient(135deg, #1e3a5f 0%, #2d5a9e 100%);
   color: #fff;
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1rem;
   box-shadow: var(--shadow-md);
   position: sticky;
   top: 0;
@@ -57,108 +65,116 @@ html, body {
   margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
 .header-title {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
 }
 
 .header-icon {
-  font-size: 2rem;
+  font-size: 1.6rem;
   line-height: 1;
 }
 
 .header-title h1 {
-  font-size: 1.4rem;
+  font-size: clamp(1rem, 3vw, 1.4rem);
   font-weight: 700;
   letter-spacing: 0.02em;
   line-height: 1.2;
 }
 
 .header-sub {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   opacity: 0.8;
   letter-spacing: 0.05em;
 }
 
 .header-desc {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   opacity: 0.85;
   flex: 1;
-  min-width: 200px;
+  min-width: 180px;
+  display: none; /* モバイルでは非表示 */
 }
 
-/* ---------- メインレイアウト ---------- */
+/* ---------- メインレイアウト（モバイルファースト） ---------- */
 .app-main {
-  display: grid;
-  grid-template-columns: 340px 1fr;
-  gap: 1.25rem;
-  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem;
   max-width: 1400px;
   margin: 0 auto;
-  min-height: calc(100vh - 80px - 48px);
 }
+
+/* モバイルでは表示エリアを先に（StreetViewが主役） */
+.view-area  { order: 1; }
+.side-panel { order: 2; }
 
 /* ---------- 左サイドパネル ---------- */
 .side-panel {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 /* ---------- カード ---------- */
 .card {
   background: var(--color-surface);
   border-radius: var(--radius-md);
-  padding: 1.25rem;
+  padding: 1rem;
   box-shadow: var(--shadow-sm);
   border: 1px solid var(--color-border);
 }
 
 .card-title {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 700;
   color: var(--color-text);
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid var(--color-bg);
 }
 
 /* ---------- フォーム ---------- */
 .form-group {
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.75rem;
 }
 
 .form-group label {
   display: block;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--color-text-sub);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.3rem;
 }
 
 .input-row {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 input[type="text"],
 input[type="number"],
 textarea {
   width: 100%;
+  /* モバイルでタップしやすい高さ */
+  min-height: var(--touch-min);
   padding: 0.6rem 0.8rem;
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-sm);
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: 1rem; /* iOSのズーム防止（16px以上） */
   color: var(--color-text);
   background: #f8fafc;
   transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 input:focus, textarea:focus {
@@ -169,6 +185,7 @@ input:focus, textarea:focus {
 
 textarea {
   resize: vertical;
+  min-height: 80px;
 }
 
 /* ---------- ボタン ---------- */
@@ -177,15 +194,18 @@ textarea {
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  padding: 0.55rem 1rem;
+  min-height: var(--touch-min);
+  padding: 0.6rem 1rem;
   border: none;
   border-radius: var(--radius-sm);
   font-family: var(--font-sans);
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
   white-space: nowrap;
+  /* タップ時のハイライト無効化 */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .btn:active { transform: scale(0.97); }
@@ -194,6 +214,7 @@ textarea {
   background: var(--color-primary);
   color: #fff;
   box-shadow: var(--shadow-sm);
+  min-width: var(--touch-min);
 }
 .btn-primary:hover { background: var(--color-primary-h); }
 
@@ -217,14 +238,20 @@ textarea {
 }
 .btn-ghost:hover { background: #f1f5f9; color: var(--color-danger); }
 
-.btn-sm { padding: 0.3rem 0.6rem; font-size: 0.78rem; }
+.btn-sm {
+  min-height: 34px;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+}
 
 .btn-danger {
   background: transparent;
   color: var(--color-danger);
   border: none;
-  padding: 0.2rem 0.4rem;
-  font-size: 1rem;
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0.2rem 0.5rem;
+  font-size: 1.1rem;
   line-height: 1;
   border-radius: 50%;
 }
@@ -232,7 +259,6 @@ textarea {
 
 /* ---------- お気に入り ---------- */
 .favorites-card {
-  flex: 1;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -242,7 +268,7 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
   padding-bottom: 0.5rem;
   border-bottom: 2px solid var(--color-bg);
 }
@@ -255,17 +281,19 @@ textarea {
 
 #favorites-list {
   overflow-y: auto;
-  max-height: 420px;
+  max-height: 300px;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.6rem;
+  /* iOS慣性スクロール */
+  -webkit-overflow-scrolling: touch;
 }
 
 .empty-msg {
   text-align: center;
   color: var(--color-text-muted);
   font-size: 0.82rem;
-  padding: 1.5rem 0.5rem;
+  padding: 1.2rem 0.5rem;
   line-height: 1.8;
 }
 
@@ -274,7 +302,7 @@ textarea {
   background: #f8fafc;
   border: 1.5px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 0.75rem;
+  padding: 0.7rem;
   transition: box-shadow 0.2s, border-color 0.2s;
 }
 
@@ -287,8 +315,8 @@ textarea {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.35rem;
+  gap: 0.4rem;
+  margin-bottom: 0.3rem;
 }
 
 .fav-address {
@@ -314,7 +342,7 @@ textarea {
   font-size: 0.78rem;
   color: var(--color-text-sub);
   line-height: 1.5;
-  margin: 0.3rem 0 0.5rem;
+  margin: 0.25rem 0 0.4rem;
   padding-left: 0.25rem;
   border-left: 2px solid #e2e8f0;
 }
@@ -322,27 +350,29 @@ textarea {
 .fav-saved {
   font-size: 0.7rem;
   color: var(--color-text-muted);
-  margin-top: 0.25rem;
+  margin-top: 0.2rem;
 }
 
 .fav-actions {
   display: flex;
   gap: 0.4rem;
-  margin-top: 0.5rem;
+  margin-top: 0.45rem;
 }
 
 .fav-goto {
   flex: 1;
-  padding: 0.35rem 0.5rem;
+  padding: 0.4rem 0.5rem;
+  min-height: var(--touch-min);
   background: var(--color-primary);
   color: #fff;
   border: none;
   border-radius: 6px;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
   font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
 }
 .fav-goto:hover { background: var(--color-primary-h); }
 
@@ -350,7 +380,7 @@ textarea {
 .view-area {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.6rem;
   min-width: 0;
 }
 
@@ -359,7 +389,7 @@ textarea {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-sm);
-  padding: 0.6rem 1rem;
+  padding: 0.55rem 0.85rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -369,7 +399,7 @@ textarea {
 .location-icon { font-size: 1rem; flex-shrink: 0; }
 
 .location-address {
-  font-size: 0.875rem;
+  font-size: 0.82rem;
   color: var(--color-text-sub);
   font-weight: 500;
   white-space: nowrap;
@@ -380,7 +410,7 @@ textarea {
 /* 地図コンテナ */
 .map-container {
   position: relative;
-  height: 220px;
+  height: 180px;
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
@@ -395,8 +425,9 @@ textarea {
 /* ストリートビューコンテナ */
 .sv-container {
   position: relative;
-  flex: 1;
-  min-height: 380px;
+  height: 55vw;       /* モバイル：画面幅の55% */
+  min-height: 260px;
+  max-height: 420px;
   border-radius: var(--radius-md);
   overflow: hidden;
   box-shadow: var(--shadow-md);
@@ -408,9 +439,9 @@ textarea {
 .sv-label {
   background: rgba(30, 58, 95, 0.92);
   color: #fff;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 600;
-  padding: 0.4rem 0.9rem;
+  padding: 0.35rem 0.85rem;
   letter-spacing: 0.03em;
   position: absolute;
   top: 0;
@@ -421,8 +452,8 @@ textarea {
 
 #street-view {
   width: 100%;
-  flex: 1;
-  min-height: 380px;
+  height: 100%;
+  min-height: 260px;
 }
 
 /* プレースホルダー */
@@ -439,15 +470,15 @@ textarea {
   pointer-events: none;
 }
 
-.view-placeholder span { font-size: 2.5rem; }
-.view-placeholder p   { font-size: 0.9rem; font-weight: 600; }
-.view-placeholder small { font-size: 0.78rem; }
+.view-placeholder span  { font-size: 2.2rem; }
+.view-placeholder p     { font-size: 0.85rem; font-weight: 600; }
+.view-placeholder small { font-size: 0.75rem; }
 
 /* ---------- フッター ---------- */
 .app-footer {
   text-align: center;
   padding: 0.75rem 1rem;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--color-text-muted);
   border-top: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -459,46 +490,143 @@ textarea {
   box-shadow: var(--shadow-lg) !important;
   border: 1px solid var(--color-border) !important;
   font-family: var(--font-sans) !important;
-  font-size: 0.85rem !important;
+  font-size: 0.9rem !important;
   margin-top: 2px !important;
+  z-index: 10000 !important;
 }
-.pac-item { padding: 0.45rem 0.8rem !important; cursor: pointer; }
-.pac-item:hover { background: #f0f4ff; }
-.pac-item-selected { background: #e8f0fe !important; }
+.pac-item { padding: 0.5rem 0.8rem !important; cursor: pointer; min-height: var(--touch-min); display: flex !important; align-items: center !important; }
+.pac-item:hover     { background: #f0f4ff; }
+.pac-item-selected  { background: #e8f0fe !important; }
 
-/* ---------- レスポンシブ ---------- */
-@media (max-width: 900px) {
-  .app-main {
-    grid-template-columns: 1fr;
-    padding: 0.75rem;
+/* ====================================================
+   タブレット（600px〜）
+   ==================================================== */
+@media (min-width: 600px) {
+  .app-header {
+    padding: 0.85rem 1.25rem;
   }
 
-  .side-panel {
-    order: 2;
+  .header-title h1 {
+    font-size: 1.25rem;
   }
 
-  .view-area {
-    order: 1;
-  }
-
-  #favorites-list {
-    max-height: 260px;
+  .map-container {
+    height: 200px;
   }
 
   .sv-container,
   #street-view {
-    min-height: 280px;
+    height: 380px;
+    max-height: 480px;
   }
 
-  .map-container {
-    height: 180px;
+  #favorites-list {
+    max-height: 360px;
   }
 }
 
-@media (max-width: 480px) {
+/* ====================================================
+   デスクトップ（900px〜）：2カラムレイアウト
+   ==================================================== */
+@media (min-width: 900px) {
+
   .app-header {
-    padding: 0.75rem 1rem;
+    padding: 1rem 1.5rem;
   }
-  .header-title h1 { font-size: 1.1rem; }
-  .header-desc { display: none; }
+
+  .header-title h1 {
+    font-size: 1.4rem;
+  }
+
+  .header-desc {
+    display: block; /* デスクトップでは説明文を表示 */
+  }
+
+  /* 2カラムグリッド */
+  .app-main {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    min-height: calc(100vh - 80px - 48px);
+  }
+
+  /* デスクトップではサイドパネルを左に戻す */
+  .side-panel { order: 0; }
+  .view-area  { order: 0; }
+
+  /* フォームのフォントサイズを少し小さく */
+  input[type="text"],
+  input[type="number"],
+  textarea {
+    font-size: 0.875rem;
+    min-height: 38px;
+  }
+
+  .btn {
+    min-height: 38px;
+    font-size: 0.875rem;
+  }
+
+  .fav-goto {
+    min-height: 36px;
+  }
+
+  .map-container {
+    height: 220px;
+  }
+
+  /* デスクトップではStreetViewを縦に伸ばす */
+  .sv-container {
+    flex: 1;
+    height: auto;
+    max-height: none;
+    min-height: 380px;
+  }
+
+  #street-view {
+    height: 100%;
+    min-height: 380px;
+  }
+
+  #favorites-list {
+    max-height: 420px;
+  }
+
+  .card {
+    padding: 1.25rem;
+  }
+}
+
+/* ====================================================
+   大画面（1200px〜）
+   ==================================================== */
+@media (min-width: 1200px) {
+  .app-main {
+    grid-template-columns: 360px 1fr;
+  }
+}
+
+/* ====================================================
+   モバイル横向き（landscape）
+   ==================================================== */
+@media (max-height: 500px) and (orientation: landscape) {
+  .app-header {
+    padding: 0.4rem 1rem;
+  }
+
+  .header-icon { font-size: 1.2rem; }
+  .header-title h1 { font-size: 0.95rem; }
+  .header-sub { display: none; }
+
+  .sv-container,
+  #street-view {
+    height: 70vw;
+    min-height: 200px;
+    max-height: 340px;
+  }
+
+  .map-container {
+    height: 140px;
+  }
 }
