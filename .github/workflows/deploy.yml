@@ -1,0 +1,62 @@
+# ============================================================
+#  .github/workflows/deploy.yml
+#  GitHub Actions — 自動デプロイワークフロー
+#
+#  【動作】
+#  mainブランチにpushされると自動的に：
+#  1. GitHub SecretからAPIキーを取得
+#  2. config.js を自動生成（gitには保存しない）
+#  3. GitHub Pages に公開
+# ============================================================
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+# GitHub Pages への書き込み権限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時デプロイは1つだけ
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      # リポジトリのコードを取得
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # GitHub Secret から config.js を生成
+      # ★ この行のキーは GitHub Secret から自動で挿入されます
+      - name: Generate config.js from secret
+        run: |
+          echo "const CONFIG = { GOOGLE_MAPS_API_KEY: '${{ secrets.GOOGLE_MAPS_API_KEY }}' };" > config.js
+
+      # GitHub Pages の設定
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      # ファイルをアップロード
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      # GitHub Pages にデプロイ
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
